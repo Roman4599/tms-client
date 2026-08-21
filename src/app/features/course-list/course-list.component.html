@@ -1,0 +1,30 @@
+<div class="course-list">
+  <h2>📚 Course List</h2>
+  
+  @if (loading()) {
+    <p class="loading">Loading courses...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else {
+    <p class="total">Total Courses: {{ totalCourses() }}</p>
+    
+    <div class="courses-grid">
+      @for (course of courses(); track course.id) {
+        <div class="course-card" [routerLink]="['/courses', course.id]">
+          <h3>{{ course.code }}</h3>
+          <h4>{{ course.title }}</h4>
+          <p>👥 Capacity: {{ course.enrollmentCount }}/{{ course.maxCapacity }}</p>
+          <p class="status">
+            @if (course.enrollmentCount >= course.maxCapacity) {
+              🟢 Full
+            } @else {
+              🟡 Available
+            }
+          </p>
+        </div>
+      } @empty {
+        <p>No courses available.</p>
+      }
+    </div>
+  }
+</div>

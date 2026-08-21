@@ -1,0 +1,80 @@
+<div class="course-detail">
+  @if (loading()) {
+    <p class="loading">Loading course details...</p>
+  } @else if (notFound()) {
+    <div class="not-found">
+      <h2>❌ Course Not Found</h2>
+      <p>The course you're looking for doesn't exist.</p>
+      <a routerLink="/courses">← Back to Courses</a>
+    </div>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (course()) {
+    <div class="course-container">
+      <div class="detail-header">
+        <a routerLink="/courses" class="back-link">← Back to Courses</a>
+        <div class="action-buttons">
+          <a [routerLink]="['/courses/edit', course()?.id]" class="edit-btn">✏️ Edit</a>
+          <button class="delete-btn" (click)="deleteCourse()">🗑️ Delete</button>
+        </div>
+      </div>
+      
+      <div class="course-header">
+        <h1>{{ course()?.code }}</h1>
+        <h2>{{ course()?.title }}</h2>
+      </div>
+
+      <div class="course-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Course Code</span>
+            <span class="value">{{ course()?.code }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Title</span>
+            <span class="value">{{ course()?.title }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Maximum Capacity</span>
+            <span class="value">{{ course()?.maxCapacity }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Enrolled Students</span>
+            <span class="value">{{ course()?.enrollmentCount }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Available Spots</span>
+            <span class="value" [class.full]="isFull()">
+              {{ availableSpots() }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="label">Status</span>
+            <span class="value">
+              @if (isFull()) {
+                <span class="status-full">🟢 Full</span>
+              } @else {
+                <span class="status-available">🟡 Available</span>
+              }
+            </span>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <p>Enrollment Progress</p>
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              [style.width.%]="(course()!.enrollmentCount / course()!.maxCapacity) * 100"
+              [class.full]="isFull()"
+            >
+            </div>
+          </div>
+          <span class="progress-text">
+            {{ course()!.enrollmentCount }}/{{ course()!.maxCapacity }} enrolled
+          </span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

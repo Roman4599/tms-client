@@ -1,0 +1,188 @@
+.course-detail {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+}
+
+.error {
+  color: #e74c3c;
+  background: #fdf0ed;
+  border-radius: 4px;
+}
+
+.not-found {
+  text-align: center;
+  padding: 40px;
+  
+  h2 {
+    color: #e74c3c;
+  }
+  
+  a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 16px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.course-container {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  
+  .back-link {
+    color: #3498db;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    
+    .edit-btn {
+      background: #3498db;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.3s;
+      
+      &:hover {
+        background: #2980b9;
+      }
+    }
+    
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      
+      &:hover {
+        background: #c0392b;
+      }
+    }
+  }
+}
+
+.course-header {
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+  
+  h1 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 28px;
+  }
+  
+  h2 {
+    margin: 5px 0 0;
+    color: #7f8c8d;
+    font-size: 18px;
+    font-weight: normal;
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.info-item {
+  background: #f8f9fa;
+  padding: 12px 15px;
+  border-radius: 6px;
+  
+  .label {
+    display: block;
+    font-size: 12px;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  
+  .value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    
+    &.full {
+      color: #e74c3c;
+    }
+  }
+}
+
+.status-full {
+  color: #e74c3c;
+}
+
+.status-available {
+  color: #f39c12;
+}
+
+.progress-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  
+  p {
+    margin: 0 0 10px;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+}
+
+.progress-bar {
+  background: #ecf0f1;
+  border-radius: 10px;
+  height: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  background: #3498db;
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 10px;
+  
+  &.full {
+    background: #e74c3c;
+  }
+}
+
+.progress-text {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #7f8c8d;
+}

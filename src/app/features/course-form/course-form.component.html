@@ -1,0 +1,157 @@
+<div class="course-form-container">
+  <div class="form-header">
+    <h2>
+      @if (isEditMode()) {
+        ✏️ Edit Course
+      } @else {
+        ➕ Create New Course
+      }
+    </h2>
+    <a routerLink="/courses" class="back-link">← Back to Courses</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-message">Loading course data...</div>
+  }
+
+  @if (submitSuccess()) {
+    <div class="success-message">
+      ✅ Course {{ isEditMode() ? 'updated' : 'created' }} successfully! Redirecting...
+    </div>
+  }
+
+  @if (submitError()) {
+    <div class="error-message">
+      ❌ {{ submitError() }}
+    </div>
+  }
+
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="course-form">
+    <!-- Code Field -->
+    <div class="form-group">
+      <label for="code">Course Code *</label>
+      <input 
+        type="text" 
+        id="code" 
+        formControlName="code"
+        placeholder="e.g., CS101"
+        [class.invalid]="code?.invalid && code?.touched"
+      >
+      @if (code?.invalid && code?.touched) {
+        <div class="validation-errors">
+          @if (code?.errors?.['required']) {
+            <span>Course code is required</span>
+          }
+          @if (code?.errors?.['minlength']) {
+            <span>Course code must be at least 3 characters</span>
+          }
+          @if (code?.errors?.['maxlength']) {
+            <span>Course code must be at most 10 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Title Field -->
+    <div class="form-group">
+      <label for="title">Course Title *</label>
+      <input 
+        type="text" 
+        id="title" 
+        formControlName="title"
+        placeholder="e.g., Introduction to Computer Science"
+        [class.invalid]="title?.invalid && title?.touched"
+      >
+      @if (title?.invalid && title?.touched) {
+        <div class="validation-errors">
+          @if (title?.errors?.['required']) {
+            <span>Course title is required</span>
+          }
+          @if (title?.errors?.['minlength']) {
+            <span>Course title must be at least 5 characters</span>
+          }
+          @if (title?.errors?.['maxlength']) {
+            <span>Course title must be at most 100 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Max Capacity Field -->
+    <div class="form-group">
+      <label for="maxCapacity">Maximum Capacity *</label>
+      <input 
+        type="number" 
+        id="maxCapacity" 
+        formControlName="maxCapacity"
+        placeholder="e.g., 30"
+        min="1"
+        max="100"
+        [class.invalid]="maxCapacity?.invalid && maxCapacity?.touched"
+      >
+      @if (maxCapacity?.invalid && maxCapacity?.touched) {
+        <div class="validation-errors">
+          @if (maxCapacity?.errors?.['required']) {
+            <span>Maximum capacity is required</span>
+          }
+          @if (maxCapacity?.errors?.['min']) {
+            <span>Maximum capacity must be at least 1</span>
+          }
+          @if (maxCapacity?.errors?.['max']) {
+            <span>Maximum capacity must be at most 100</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Enrollment Count Field -->
+    <div class="form-group">
+      <label for="enrollmentCount">Current Enrollment *</label>
+      <input 
+        type="number" 
+        id="enrollmentCount" 
+        formControlName="enrollmentCount"
+        placeholder="e.g., 0"
+        min="0"
+        [class.invalid]="enrollmentCount?.invalid && enrollmentCount?.touched"
+      >
+      @if (enrollmentCount?.invalid && enrollmentCount?.touched) {
+        <div class="validation-errors">
+          @if (enrollmentCount?.errors?.['required']) {
+            <span>Enrollment count is required</span>
+          }
+          @if (enrollmentCount?.errors?.['min']) {
+            <span>Enrollment count must be at least 0</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn-secondary" 
+        (click)="resetForm()"
+        [disabled]="isSubmitting() || isLoading()"
+      >
+        Reset
+      </button>
+      <button 
+        type="submit" 
+        class="btn-primary" 
+        [disabled]="courseForm.invalid || isSubmitting() || isLoading()"
+      >
+        @if (isSubmitting()) {
+          <span class="spinner"></span> Saving...
+        } @else {
+          @if (isEditMode()) {
+            💾 Update Course
+          } @else {
+            ✨ Create Course
+          }
+        }
+      </button>
+    </div>
+  </form>
+</div>
