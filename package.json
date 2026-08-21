@@ -1,5 +1,6 @@
 {
   "name": "tms-client",
+<<<<<<< HEAD
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -29,5 +30,24 @@
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
+=======
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@js-temporal/polyfill": "^0.5.1"
+>>>>>>> 3fcab51076904877412568d0c1ed0273ec4a5343
   }
 }

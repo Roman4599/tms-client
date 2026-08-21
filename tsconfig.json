@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
@@ -29,3 +30,18 @@
     }
   ]
 }
+=======
+{
+  "compilerOptions": {
+    "target": "es2025",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "types": []
+  },
+  "include": ["*.ts", "models/*.ts"]
+}
+>>>>>>> 3fcab51076904877412568d0c1ed0273ec4a5343

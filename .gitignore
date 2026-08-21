@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
@@ -42,3 +43,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+=======
+node_modules/
+dist/
+*.js
+*.js.map
+*.d.ts
+!src/**/*.d.ts
+>>>>>>> 3fcab51076904877412568d0c1ed0273ec4a5343
