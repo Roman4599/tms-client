@@ -35,17 +35,17 @@
         id="code" 
         formControlName="code"
         placeholder="e.g., CS101"
-        [class.invalid]="code?.invalid && code?.touched"
+        [class.invalid]="code.invalid && code.touched"
       >
-      @if (code?.invalid && code?.touched) {
+      @if (code.invalid && code.touched) {
         <div class="validation-errors">
-          @if (code?.errors?.['required']) {
+          @if (code.hasError('required')) {
             <span>Course code is required</span>
           }
-          @if (code?.errors?.['minlength']) {
+          @if (code.hasError('minlength')) {
             <span>Course code must be at least 3 characters</span>
           }
-          @if (code?.errors?.['maxlength']) {
+          @if (code.hasError('maxlength')) {
             <span>Course code must be at most 10 characters</span>
           }
         </div>
@@ -60,17 +60,17 @@
         id="title" 
         formControlName="title"
         placeholder="e.g., Introduction to Computer Science"
-        [class.invalid]="title?.invalid && title?.touched"
+        [class.invalid]="title.invalid && title.touched"
       >
-      @if (title?.invalid && title?.touched) {
+      @if (title.invalid && title.touched) {
         <div class="validation-errors">
-          @if (title?.errors?.['required']) {
+          @if (title.hasError('required')) {
             <span>Course title is required</span>
           }
-          @if (title?.errors?.['minlength']) {
+          @if (title.hasError('minlength')) {
             <span>Course title must be at least 5 characters</span>
           }
-          @if (title?.errors?.['maxlength']) {
+          @if (title.hasError('maxlength')) {
             <span>Course title must be at most 100 characters</span>
           }
         </div>
@@ -87,17 +87,17 @@
         placeholder="e.g., 30"
         min="1"
         max="100"
-        [class.invalid]="maxCapacity?.invalid && maxCapacity?.touched"
+        [class.invalid]="maxCapacity.invalid && maxCapacity.touched"
       >
-      @if (maxCapacity?.invalid && maxCapacity?.touched) {
+      @if (maxCapacity.invalid && maxCapacity.touched) {
         <div class="validation-errors">
-          @if (maxCapacity?.errors?.['required']) {
+          @if (maxCapacity.hasError('required')) {
             <span>Maximum capacity is required</span>
           }
-          @if (maxCapacity?.errors?.['min']) {
+          @if (maxCapacity.hasError('min')) {
             <span>Maximum capacity must be at least 1</span>
           }
-          @if (maxCapacity?.errors?.['max']) {
+          @if (maxCapacity.hasError('max')) {
             <span>Maximum capacity must be at most 100</span>
           }
         </div>
@@ -113,14 +113,14 @@
         formControlName="enrollmentCount"
         placeholder="e.g., 0"
         min="0"
-        [class.invalid]="enrollmentCount?.invalid && enrollmentCount?.touched"
+        [class.invalid]="enrollmentCount.invalid && enrollmentCount.touched"
       >
-      @if (enrollmentCount?.invalid && enrollmentCount?.touched) {
+      @if (enrollmentCount.invalid && enrollmentCount.touched) {
         <div class="validation-errors">
-          @if (enrollmentCount?.errors?.['required']) {
+          @if (enrollmentCount.hasError('required')) {
             <span>Enrollment count is required</span>
           }
-          @if (enrollmentCount?.errors?.['min']) {
+          @if (enrollmentCount.hasError('min')) {
             <span>Enrollment count must be at least 0</span>
           }
         </div>

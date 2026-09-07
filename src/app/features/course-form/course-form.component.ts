@@ -71,10 +71,10 @@ export class CourseFormComponent implements OnInit {
     });
   }
 
-  get code() { return this.courseForm.get('code'); }
-  get title() { return this.courseForm.get('title'); }
-  get maxCapacity() { return this.courseForm.get('maxCapacity'); }
-  get enrollmentCount() { return this.courseForm.get('enrollmentCount'); }
+  get code() { return this.courseForm.get('code')!; }
+  get title() { return this.courseForm.get('title')!; }
+  get maxCapacity() { return this.courseForm.get('maxCapacity')!; }
+  get enrollmentCount() { return this.courseForm.get('enrollmentCount')!; }
 
   onSubmit(): void {
     if (this.courseForm.invalid) {

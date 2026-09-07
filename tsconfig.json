@@ -22,6 +22,14 @@
       "dom"
     ]
   },
+  "exclude": [
+    "legacy",
+    "node_modules",
+    "dist",
+    "out-tsc",
+    ".angular",
+    ".vscode"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
