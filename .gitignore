@@ -1,16 +1,19 @@
-<<<<<<< HEAD
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
 # Compiled output
 /dist
-/tmp
 /out-tsc
+/tmp
 /bazel-out
 
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
+
+# Angular
+/.angular/cache
+/coverage
+/connect.lock
+/.sass-cache
 
 # IDEs and editors
 .idea/
@@ -31,23 +34,11 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
 testem.log
 /typings
 __screenshots__/
+libpeerconnection.log
 
 # System files
 .DS_Store
 Thumbs.db
-=======
-node_modules/
-dist/
-*.js
-*.js.map
-*.d.ts
-!src/**/*.d.ts
->>>>>>> 3fcab51076904877412568d0c1ed0273ec4a5343
