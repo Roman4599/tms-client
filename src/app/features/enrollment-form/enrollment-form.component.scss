@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #2c3e50;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-top: 10px;
+}
+
+input,
+textarea {
+  padding: 10px 12px;
+  border: 1px solid #dce1e6;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: #c0392b;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.success {
+  padding: 20px;
+  background: #e8f8ef;
+  color: #1e8e4e;
+  border-left: 4px solid #1e8e4e;
+  border-radius: 5px;
+}
+
+h3 {
+  color: #2c3e50;
+  margin-top: 20px;
+}
+
+.backup-row {
+  display: flex;
+  gap: 8px;
+
+  input {
+    flex: 1;
+  }
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 5px;
+  background: #3498db;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover:not(:disabled) {
+    background: #2980b9;
+  }
+
+  &:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+  }
+}
+
+button[type="button"] {
+  background: #ecf0f1;
+  color: #2c3e50;
+
+  &:hover:not(:disabled) {
+    background: #dde4e8;
+  }
+}

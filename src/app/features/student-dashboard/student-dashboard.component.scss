@@ -36,6 +36,24 @@
     text-align: center;
   }
 
+  .spinner,
+  .error {
+    margin-top: 15px;
+    padding: 16px;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+
+  .spinner {
+    background: #eaf6ff;
+    color: #2980b9;
+  }
+
+  .error {
+    background: #fee;
+    color: #c0392b;
+  }
+
   .selection-hint {
     margin-top: 20px;
     background: #eaf6ff;
