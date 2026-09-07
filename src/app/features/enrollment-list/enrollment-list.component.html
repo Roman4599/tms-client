@@ -1,0 +1,30 @@
+<div class="enrollment-list">
+  <h2>🗂️ Enrollment List</h2>
+
+  @if (store.isLoading()) {
+    <p class="loading">Loading enrollments...</p>
+  } @else {
+    @if (store.error()) {
+      <p class="error">{{ store.error() }}</p>
+    } @else {
+      <p class="pending summary">⏳ Pending: {{ store.pendingCount() }}</p>
+
+      @for (enrollment of store.entities(); track enrollment.id) {
+        <div class="enrollment-card">
+          <div class="enrollment-info">
+            <span class="name">{{ enrollment.studentName }}</span>
+            <span class="course">— {{ enrollment.courseName }}</span>
+          </div>
+          <span class="status status-{{ enrollment.status | lowercase }}">
+            {{ enrollment.status }}
+          </span>
+          @if (enrollment.status === 'Pending') {
+            <button (click)="onApprove(enrollment.id)">Approve</button>
+          }
+        </div>
+      } @empty {
+        <p>No enrollments found.</p>
+      }
+    }
+  }
+</div>

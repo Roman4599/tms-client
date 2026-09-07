@@ -16,6 +16,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "enrollments",
+    loadComponent: () =>
+      import("./features/enrollment-list/enrollment-list.component").then(
+        (m) => m.EnrollmentListComponent,
+      ),
+  },
+  {
     path: "courses",
     loadComponent: () =>
       import("./features/course-list/course-list.component").then(
