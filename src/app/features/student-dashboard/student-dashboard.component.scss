@@ -1,7 +1,7 @@
 .dashboard {
   padding: 20px;
   font-family: Arial, sans-serif;
-  max-width: 600px;
+  max-width: 800px;
   margin: 50px auto;
   background-color: #f0f4f8;
   border-radius: 10px;
@@ -12,6 +12,34 @@
     border-bottom: 3px solid #3498db;
     padding-bottom: 15px;
     margin-bottom: 20px;
+  }
+
+  h2 {
+    color: #2c3e50;
+    margin-top: 30px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 15px;
+  }
+
+  .empty-state {
+    margin-top: 15px;
+    padding: 20px;
+    background: white;
+    border: 1px dashed #bdc3c7;
+    border-radius: 8px;
+    color: #7f8c8d;
+    text-align: center;
+  }
+
+  .selection-hint {
+    margin-top: 20px;
+    background: #eaf6ff;
+    border-left: 4px solid #3498db;
   }
   
   p {
