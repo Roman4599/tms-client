@@ -1,16 +1,21 @@
 # TMS Client — Training Management System Frontend
 
 Angular 22 frontend for the Training Management System (TMS). Students browse a
-course catalog, request enrollment, and drill into course details; admins manage
-courses (add / edit / delete).
+course catalog and request enrollment; instructors run a Command Center against a
+single centralized enrollment store.
+
+> **Lab docs:** every module/session exercise is documented with goal, files,
+> implementation, and verification steps in [`docs/`](docs/README.md).
 
 ## Tech Stack
 
 - Angular 22 (standalone components, no NgModules)
-- Angular Signals (`signal()`, `computed()`, `input()`, `output()`)
+- Angular Signals (`signal()`, `computed()`, `input()`, `output()`, `rxResource`)
+- NgRx SignalStore (`@ngrx/signals@22`) — centralized enrollment state
+- Angular Material 22 (MatTable, MatPaginator, MatSort)
+- `@defer` / `@defer (on viewport; ...)` lazy chunk splitting
 - Angular Router (lazy-loaded routes, component input binding for route params)
-- SCSS
-- TypeScript 6 (strict mode)
+- Reactive Forms, SCSS, TypeScript 6 (strict mode)
 
 ## Project Structure
 
@@ -18,22 +23,29 @@ courses (add / edit / delete).
 src/
 └── app/
     ├── app.component.*           App shell: nav bar + <router-outlet>
-    ├── app.config.ts             App providers (router, HTTP, input binding)
+    ├── app.config.ts             App providers (router, HTTP, animations)
     ├── app.routes.ts             Route table (lazy-loaded features)
     ├── ui/                       Reusable presentational components
-    │   └── course-card/          CourseCardComponent (course @input, enroll @output)
+    │   ├── course-card/          CourseCardComponent (course @input, enroll @output)
+    │   └── analytics-chart/      Chart (deferred chunk) feeding off the store
     ├── features/                 Route-backed, lazy-loaded views
-    │   ├── student-dashboard/    Student dashboard + course catalog grid
+    │   ├── student-dashboard/    Student dashboard + live course catalog
     │   ├── course-list/          Admin course list w/ pagination UI
     │   ├── course-form/          Create & edit course form (reactive forms)
-    │   └── course-detail/        Course detail: seats, status, edit/delete
-    ├── models/                   Domain models (Course, CourseDetail, PagedResponse)
-    └── services/                 API services
-        └── course.service.ts     CourseService (mock data behind a real API shape)
+    │   ├── course-detail/        Course detail: seats, status, edit/delete
+    │   ├── enrollment-form/      Enrollment request form (reactive, FormArray)
+    │   ├── enrollment-list/      Material grid wired to EnrollmentStore
+    │   └── instructor-dashboard/ Command Center + deferred analytics chart
+    ├── store/                    SignalStore (single source of truth)
+    │   └── enrollment.store.ts   EnrollmentStore: entities, pendingCount, actions
+    ├── models/                   Domain models (Course, Enrollment, PagedResponse)
+    └── services/                 API services (course live, enrollment via proxy)
+        ├── course.service.ts     CourseService (live .NET API, envelope mapping)
+        └── enrollment.service.ts EnrollmentService (relative path, proxy in M10 S1)
 
 legacy/
 └── m2-data-layer/                Earlier Node/TypeScript data-layer (Module 2),
-                                  kept for reference, not part of the Angular app.
+                                  kept for reference, excluded from tsconfig.
 ```
 
 ### Where changes go (convention)
@@ -42,25 +54,31 @@ legacy/
 | ----------------------------- | ----------------------------------- |
 | A small reusable UI block     | `src/app/ui/…` (e.g. `course-card`) |
 | A page / routed view          | `src/app/features/…`                |
+| Shared reactive state         | `src/app/store/…`                   |
 | A domain type                 | `src/app/models/…`                  |
 | API interaction               | `src/app/services/…`                |
 
-Every component is standalone, prefixed `tms-` (reusable) or `app-` (feature),
-and uses the `*.component.{ts,html,scss}` naming.
+Components are standalone, prefixed `tms-` (reusable) or `app-` (feature), use
+`*.component.{ts,html,scss}` naming, and (new components) `OnPush`.
 
 ## Features
 
-- **Student Dashboard** (`/dashboard`) — credit tracker with signals; reactive
-  "Register for a Class" button; **Course Catalog** grid of `CourseCardComponent`s
-  with honest empty state.
-- **Course Cards** — display title, code, seats; badge flips to "Full" and the
-  Enroll button disables when `enrollmentCount >= maxCapacity`; Enroll emits the
-  course back to the parent; the title links to `/courses/:id`.
-- **Course Detail** (`/courses/:id`) — route param arrives via component input
-  binding; shows seats, available spots, status, and edit/delete actions.
-- **Course List** (`/courses`) and **Course Form** (`/courses/new`, `/courses/edit/:id`)
-  — CRUD administered through `CourseService`.
-- **Lazy loading** — each feature route loads its chunk on demand.
+- **Student Dashboard** (`/dashboard`) — **live** course catalog (`rxResource`
+  against `CourseService`), loading/error/empty states, `CourseCardComponent`s.
+- **Course Detail** (`/courses/:id`) — route param via component input binding;
+  seats, available spots, status, edit/delete.
+- **Course List / Form** (`/courses`, `/courses/new`, `/courses/edit/:id`) —
+  CRUD through `CourseService` with pagination + reactive-form validation.
+- **Enroll** (`/enroll`) — enrollment request form with dynamic backup-course
+  rows (`FormArray`).
+- **Enrollments** (`/enrollments`) — Material `MatTable` grid (sortable headers,
+  pagination 10/25/50) driven by the **singleton `EnrollmentStore`**; optimistic
+  Approve with server-error rollback keeps every widget in sync.
+- **Command Center** (`/command-center`) — pending count renders instantly; the
+  analytics chart is `@defer`red into its own lazy chunk, loaded on scroll with
+  idle prefetch.
+- **Lazy loading** — each feature route and deferred block loads on demand; the
+  main JS bundle stays ~200 kB.
 
 ## Getting Started
 
@@ -75,6 +93,9 @@ npm test         # unit tests (Karma)
 
 ## Data Notes
 
-`CourseService` currently serves mock data in-memory (same shape as the TMS API
-contract: `Course` list rows, `PagedResponse<T>`, `CourseDetail` with links).
-Swap its `mockCourses` array for real `HttpClient` calls when the API is live.
+- **Courses** — `CourseService.getAll()` hits the live .NET API
+  (`https://localhost:5001/api/courses`) and maps the `{ items: [...] }` envelope.
+- **Enrollments** — `EnrollmentService` uses a **relative** `/api/enrollments`
+  path (deployment-ready); the Angular dev proxy / environment wiring that
+  routes it to the .NET API lands in **Module 10 Session 1**. Until then the
+  grid needs that proxy (or the live API on the same origin) to populate.
