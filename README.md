@@ -104,12 +104,15 @@ npm test         # unit tests (Karma)
 
 ## Data Notes
 
-- **Courses** — `CourseService.getAll()` hits the .NET API
-  (`https://localhost:5001/api/courses`) and maps the `{ items: [...] }` envelope.
+- **Courses** — `CourseService` builds its base from `environment.apiUrl`
+  (`/api/v1` in both environments); all calls are **relative** and forwarded by
+  the dev proxy (`proxy.conf.json`, target `https://localhost:5001`) so the
+  browser sees same-origin. The `{ items: [...] }` envelope is mapped to rows.
 - **Enrollments / Grades / Hubs** — relative paths (`/api/enrollments`,
-  `/api/grades`, `/hubs/tms`) are forwarded by the Angular dev proxy
-  (`proxy.conf.json`, target `https://localhost:5001`) so calls look same-origin.
-  `"ws": true` on `/hubs` enables the SignalR WebSocket upgrade.
+  `/api/grades`, `/hubs/tms`) are forwarded by the same proxy; `"ws": true` on
+  `/hubs` enables the SignalR WebSocket upgrade.
 - **Backend** — Exercise 5 needs the M7 `TmsHub` / `ITmsHubClient` extended with
-  `ReceiveEnrollmentStatusUpdated` and the approve endpoint broadcasting it; see
-  `docs/module9/session-3.md`.
+  `ReceiveEnrollmentStatusUpdated` (see `docs/module9/session-3.md`). Exercise 1
+  needs the named `TmsClient` CORS policy in `Program.cs` driven by
+  `AllowedOrigins` in `appsettings.Development.json` (see
+  `docs/module10/session-1.md`).

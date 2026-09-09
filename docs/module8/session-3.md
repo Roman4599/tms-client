@@ -54,6 +54,9 @@ npm start   # → http://localhost:4200/enroll
 - `CourseService.getAll()` does `GET https://localhost:5001/api/courses` and maps
   the **envelope** `{ items: [...] }` → `Course[]`. (Switch to `p.data` if the
   base URL ever changes to `/api/v2/courses`.)
+  > **Superseded by M10 S1:** the service now uses the relative, env-driven
+  > base `${environment.apiUrl}/courses` (`/api/v1/...` via the dev proxy) —
+  > see `docs/module10/session-1.md`.
 - The dashboard loads the catalog with `rxResource`:
   ```ts
   rxResource({
