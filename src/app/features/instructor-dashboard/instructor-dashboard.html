@@ -1,0 +1,24 @@
+<div class="dashboard-header">
+  <h1>🎛️ Instructor Command Center</h1>
+  <p>Pending: {{ store.pendingCount() }}</p>
+</div>
+
+@if (store.isLoading()) {
+  <p class="loading">Loading enrollments...</p>
+}
+
+@if (store.error()) {
+  <p class="error">{{ store.error() }}</p>
+}
+
+<div class="chart-section">
+  @defer (on viewport; prefetch on idle(500)) {
+    <tms-analytics-chart [data]="store.entities()" />
+  } @placeholder {
+    <div class="skeleton-chart">&#11015; Scroll down to view analytics...</div>
+  } @loading (minimum 500ms) {
+    <div class="spinner">📦 Downloading chart engine...</div>
+  } @error {
+    <p>Failed to load chart. Check your connection.</p>
+  }
+</div>

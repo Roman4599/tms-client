@@ -1,0 +1,34 @@
+<div class="analytics-chart">
+  <h3>📈 Enrollment Analytics</h3>
+  <p class="subtitle">2MB charting engine loaded from lazy chunk.</p>
+
+  <div class="stats">
+    <div class="stat pending">
+      <span class="value">{{ pending }}</span>
+      <span class="label">Pending</span>
+    </div>
+    <div class="stat approved">
+      <span class="value">{{ approved }}</span>
+      <span class="label">Approved</span>
+    </div>
+    <div class="stat rejected">
+      <span class="value">{{ rejected }}</span>
+      <span class="label">Rejected</span>
+    </div>
+  </div>
+
+  <div class="bars">
+    <div class="bar-row">
+      <span class="bar-label">Pending</span>
+      <div class="track"><div class="fill pending" [style.width.%]="pct(pending)"></div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Approved</span>
+      <div class="track"><div class="fill approved" [style.width.%]="pct(approved)"></div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Rejected</span>
+      <div class="track"><div class="fill rejected" [style.width.%]="pct(rejected)"></div></div>
+    </div>
+  </div>
+</div>

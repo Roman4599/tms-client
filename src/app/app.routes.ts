@@ -23,6 +23,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "command-center",
+    loadComponent: () =>
+      import("./features/instructor-dashboard/instructor-dashboard").then(
+        (m) => m.InstructorDashboardComponent,
+      ),
+  },
+  {
     path: "courses",
     loadComponent: () =>
       import("./features/course-list/course-list.component").then(

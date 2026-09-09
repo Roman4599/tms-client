@@ -3,28 +3,50 @@
 
   @if (store.isLoading()) {
     <p class="loading">Loading enrollments...</p>
-  } @else {
-    @if (store.error()) {
-      <p class="error">{{ store.error() }}</p>
-    } @else {
-      <p class="pending summary">⏳ Pending: {{ store.pendingCount() }}</p>
-
-      @for (enrollment of store.entities(); track enrollment.id) {
-        <div class="enrollment-card">
-          <div class="enrollment-info">
-            <span class="name">{{ enrollment.studentName }}</span>
-            <span class="course">— {{ enrollment.courseName }}</span>
-          </div>
-          <span class="status status-{{ enrollment.status | lowercase }}">
-            {{ enrollment.status }}
-          </span>
-          @if (enrollment.status === 'Pending') {
-            <button (click)="onApprove(enrollment.id)">Approve</button>
-          }
-        </div>
-      } @empty {
-        <p>No enrollments found.</p>
-      }
-    }
   }
+  @if (store.error()) {
+    <p class="error">{{ store.error() }}</p>
+  }
+
+  <p class="pending summary">⏳ Pending: {{ store.pendingCount() }}</p>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="studentName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
+      <td mat-cell *matCellDef="let row">{{ row.studentName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="courseName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
+      <td mat-cell *matCellDef="let row">{{ row.courseName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let row">
+        @switch (row.status) {
+          @case ('Pending') { <span class="status status-pending">Pending</span> }
+          @case ('Approved') { <span class="status status-approved">Approved</span> }
+          @case ('Rejected') { <span class="status status-rejected">Rejected</span> }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.status === 'Pending') {
+          <button (click)="store.approveEnrollment(row.id)">Approve</button>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[10, 25, 50]"
+    showFirstLastButtons>
+  </mat-paginator>
 </div>

@@ -1,0 +1,82 @@
+.analytics-chart {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+
+  h3 {
+    margin: 0 0 4px;
+  }
+
+  .subtitle {
+    margin: 0 0 16px;
+    color: #64748b;
+    font-size: 0.85em;
+  }
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  min-width: 90px;
+
+  .value {
+    font-size: 1.6em;
+    font-weight: 700;
+  }
+
+  .label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &.pending { background: #fff3cd; color: #856404; }
+  &.approved { background: #d4edda; color: #155724; }
+  &.rejected { background: #f8d7da; color: #721c24; }
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 80px;
+  font-size: 0.85em;
+  color: #334155;
+}
+
+.track {
+  flex: 1;
+  height: 18px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+
+  &.pending { background: #f59e0b; }
+  &.approved { background: #22c55e; }
+  &.rejected { background: #ef4444; }
+}
