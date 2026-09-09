@@ -12,8 +12,9 @@ single centralized enrollment store.
 - Angular 22 (standalone components, no NgModules)
 - Angular Signals (`signal()`, `computed()`, `input()`, `output()`, `rxResource`)
 - NgRx SignalStore (`@ngrx/signals@22`) — centralized enrollment state
-- Angular Material 22 (MatTable, MatPaginator, MatSort)
+- Angular Material 22 (MatTable, MatPaginator, MatSort, forms/spinner)
 - `@defer` / `@defer (on viewport; ...)` lazy chunk splitting
+- `@microsoft/signalr` real-time hub client (auto-reconnect)
 - Angular Router (lazy-loaded routes, component input binding for route params)
 - Reactive Forms, SCSS, TypeScript 6 (strict mode)
 
@@ -35,13 +36,16 @@ src/
     │   ├── course-detail/        Course detail: seats, status, edit/delete
     │   ├── enrollment-form/      Enrollment request form (reactive, FormArray)
     │   ├── enrollment-list/      Material grid wired to EnrollmentStore
-    │   └── instructor-dashboard/ Command Center + deferred analytics chart
+    │   ├── instructor-dashboard/ Command Center + deferred analytics chart
+    │   └── grade-submission/     Rage-click-guarded grade form (exhaustMap)
     ├── store/                    SignalStore (single source of truth)
     │   └── enrollment.store.ts   EnrollmentStore: entities, pendingCount, actions
     ├── models/                   Domain models (Course, Enrollment, PagedResponse)
-    └── services/                 API services (course live, enrollment via proxy)
+    └── services/                 API + real-time services
         ├── course.service.ts     CourseService (live .NET API, envelope mapping)
-        └── enrollment.service.ts EnrollmentService (relative path, proxy in M10 S1)
+        ├── enrollment.service.ts EnrollmentService (relative path via proxy)
+        ├── grade.service.ts      GradeService (relative path via proxy)
+        └── live-sync.service.ts  LiveSyncService (SignalR hub connection manager)
 
 legacy/
 └── m2-data-layer/                Earlier Node/TypeScript data-layer (Module 2),
@@ -77,6 +81,13 @@ Components are standalone, prefixed `tms-` (reusable) or `app-` (feature), use
 - **Command Center** (`/command-center`) — pending count renders instantly; the
   analytics chart is `@defer`red into its own lazy chunk, loaded on scroll with
   idle prefetch.
+- **Grade Submission** (`/grade-submission`) — reactive grade form guarded by
+  `exhaustMap`: rage-clicks collapse to exactly one POST; `takeUntilDestroyed`
+  keeps the stream leak-free.
+- **Real-time sync** — `LiveSyncService` (SignalR `/hubs/tms`, auto-reconnect)
+  pushes `ReceiveEnrollmentStatusUpdated` events into the `EnrollmentStore`; the
+  grid, dashboard, and Command Center update across all open tabs instantly. Dev
+  server proxies `/api` + `/hubs` to the .NET API (`proxy.conf.json`).
 - **Lazy loading** — each feature route and deferred block loads on demand; the
   main JS bundle stays ~200 kB.
 
@@ -93,9 +104,12 @@ npm test         # unit tests (Karma)
 
 ## Data Notes
 
-- **Courses** — `CourseService.getAll()` hits the live .NET API
+- **Courses** — `CourseService.getAll()` hits the .NET API
   (`https://localhost:5001/api/courses`) and maps the `{ items: [...] }` envelope.
-- **Enrollments** — `EnrollmentService` uses a **relative** `/api/enrollments`
-  path (deployment-ready); the Angular dev proxy / environment wiring that
-  routes it to the .NET API lands in **Module 10 Session 1**. Until then the
-  grid needs that proxy (or the live API on the same origin) to populate.
+- **Enrollments / Grades / Hubs** — relative paths (`/api/enrollments`,
+  `/api/grades`, `/hubs/tms`) are forwarded by the Angular dev proxy
+  (`proxy.conf.json`, target `https://localhost:5001`) so calls look same-origin.
+  `"ws": true` on `/hubs` enables the SignalR WebSocket upgrade.
+- **Backend** — Exercise 5 needs the M7 `TmsHub` / `ITmsHubClient` extended with
+  `ReceiveEnrollmentStatusUpdated` and the approve endpoint broadcasting it; see
+  `docs/module9/session-3.md`.

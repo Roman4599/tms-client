@@ -1,4 +1,4 @@
-import { Component, viewChild, effect, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
@@ -13,7 +13,7 @@ import { Enrollment } from '../../models/enrollment.model';
   templateUrl: './enrollment-list.component.html',
   styleUrl: './enrollment-list.component.scss',
 })
-export class EnrollmentListComponent implements OnInit {
+export class EnrollmentListComponent {
   store = inject(EnrollmentStore);
 
   displayedColumns = ['studentName', 'courseName', 'status', 'actions'];
@@ -36,9 +36,5 @@ export class EnrollmentListComponent implements OnInit {
       this.dataSource.paginator = this.paginator();
       this.dataSource.sort = this.sort();
     });
-  }
-
-  ngOnInit() {
-    this.store.loadEnrollments();
   }
 }

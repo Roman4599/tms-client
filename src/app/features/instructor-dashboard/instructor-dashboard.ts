@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { EnrollmentStore } from '../../store/enrollment.store';
 import { AnalyticsChartComponent } from '../../ui/analytics-chart/analytics-chart';
 
@@ -9,10 +9,6 @@ import { AnalyticsChartComponent } from '../../ui/analytics-chart/analytics-char
   styleUrl: './instructor-dashboard.css',
   templateUrl: './instructor-dashboard.html',
 })
-export class InstructorDashboardComponent implements OnInit {
+export class InstructorDashboardComponent {
   store = inject(EnrollmentStore);
-
-  ngOnInit() {
-    this.store.loadEnrollments();
-  }
 }

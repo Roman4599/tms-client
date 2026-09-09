@@ -12,8 +12,9 @@ import {
   updateEntity,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, concatMap, tap, catchError, EMPTY } from 'rxjs';
+import { pipe, concatMap, tap, catchError, EMPTY, switchMap } from 'rxjs';
 import { EnrollmentService } from '../services/enrollment.service';
+import { LiveSyncService } from '../services/live-sync.service';
 import { Enrollment } from '../models/enrollment.model';
 
 /**
@@ -33,7 +34,25 @@ export const EnrollmentStore = signalStore(
       () => store.entities().filter((e) => e.status === 'Pending').length,
     ),
   })),
-  withMethods((store, api = inject(EnrollmentService)) => ({
+  withMethods((store, api = inject(EnrollmentService), sync = inject(LiveSyncService)) => ({
+    /**
+     * Real-time sync (Exercise 5)
+     * The store owns state mutations; LiveSyncService owns the transport.
+     * sync.events$ never completes, so switchMap stays subscribed for the
+     * lifetime of the app and patches the matching entity on every push.
+     */
+    listenForLiveUpdates: rxMethod<void>((source$) =>
+      source$.pipe(
+        tap(() => sync.connect()),
+        switchMap(() => sync.events$),
+        tap((event) => {
+          patchState(
+            store,
+            updateEntity({ id: event.id, changes: { status: event.status } }),
+          );
+        }),
+      ),
+    ),
     /**
      * Loading Data
      * concatMap processes one emission at a time in strict order. If

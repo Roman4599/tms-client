@@ -30,6 +30,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "grade-submission",
+    loadComponent: () =>
+      import("./features/grade-submission/grade-submission.component").then(
+        (m) => m.GradeSubmissionComponent,
+      ),
+  },
+  {
     path: "courses",
     loadComponent: () =>
       import("./features/course-list/course-list.component").then(

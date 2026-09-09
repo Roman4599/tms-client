@@ -11,6 +11,7 @@ verify**, and the **commit** that landed it.
 | 8 | 3 | Exercise 5 (enrollment form), Exercise 6 (live API) | [module8/session-3.md](module8/session-3.md) |
 | 9 | 1 | Exercise 1 (NgRx SignalStore) | [module9/session-1.md](module9/session-1.md) |
 | 9 | 2 | Exercise 2 (`@defer`), Exercise 3 (Material grid) | [module9/session-2.md](module9/session-2.md) |
+| 9 | 3 | Exercise 4 (`exhaustMap`), Exercise 5 (SignalR) | [module9/session-3.md](module9/session-3.md) |
 
 > Port numbers, envelope shapes, and Angular API details change between lab
 > docs and the real framework. Any place this project diverges from the lab
