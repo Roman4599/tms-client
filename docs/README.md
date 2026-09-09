@@ -15,6 +15,7 @@ verify**, and the **commit** that landed it.
 | 10 | 1 | Exercise 1 (CORS policy, env API URLs, CourseService) | [module10/session-1.md](module10/session-1.md) |
 | 10 | 2 | Exercise 2 (HttpOnly cookie, XSRF, interceptor, AuthService) | [module10/session-2.md](module10/session-2.md) |
 | 10 | 3 | Exercise 3 (ProblemDetails + error interceptor, optimistic rollback), Exercise 4 (sprint) | [module10/session-3.md](module10/session-3.md) |
+| 11 | 1 | Ex 1 (BCrypt), Ex 2 (Identity: TmsUser, policies, lockout, migrations) — backend | [module11/session-1.md](module11/session-1.md) |
 
 > Port numbers, envelope shapes, and Angular API details change between lab
 > docs and the real framework. Any place this project diverges from the lab

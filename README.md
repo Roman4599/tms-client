@@ -138,3 +138,10 @@ npm test         # unit tests (Karma)
   `RequireCors("TmsClient")` chain (`docs/module10/session-3.md`) all land in
   `Program.cs` + `appsettings`. Backend route must agree with
   `environment.apiUrl`/`/api/v1` (or change `apiUrl`).
+- **Identity (M11 S1)** — BCrypt hashing mechanics and ASP.NET Core Identity
+  setup (`TmsUser`, `IdentityDbContext`, password/lockout policies, migrations,
+  `UserManager`-backed `/api/auth/register` + `/api/auth/login`) are backend
+  work in the TmsApi repo; steps, code and Scalar verification live in
+  `docs/module11/session-1.md`. The M11 controller route (`api/[controller]`)
+  and the Angular `AuthService` base (`/api/v1/auth`) are expected to be
+  reconciled in M11 S2's token flow.
