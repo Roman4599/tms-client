@@ -16,6 +16,16 @@
   border-radius: 4px;
 }
 
+.delete-error {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #c0392b;
+  background: #fdecea;
+  border-left: 4px solid #e74c3c;
+  font-size: 14px;
+}
+
 .not-found {
   text-align: center;
   padding: 40px;

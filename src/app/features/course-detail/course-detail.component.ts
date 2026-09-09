@@ -1,7 +1,8 @@
-import { Component, signal, computed, OnInit, Input } from '@angular/core';
+import { Component, signal, computed, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CourseService } from '../../services/course.service';
+import { CourseStore } from '../../store/course.store';
 import { Course } from '../../models/course.model';
 
 @Component({
@@ -14,11 +15,19 @@ import { Course } from '../../models/course.model';
 export class CourseDetailComponent implements OnInit {
   @Input() id!: string;
 
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private courseService = inject(CourseService);
+  private store = inject(CourseStore);
+
   course = signal<Course | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
   notFound = signal(false);
   isDeleting = signal(false);
+
+  // Optimistic delete rolls back into this when the server rejects (409).
+  deleteError = this.store.deleteError;
 
   isFull = computed(() => {
     const c = this.course();
@@ -29,12 +38,6 @@ export class CourseDetailComponent implements OnInit {
     const c = this.course();
     return c ? c.maxCapacity - c.enrollmentCount : 0;
   });
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private courseService: CourseService
-  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -68,20 +71,19 @@ export class CourseDetailComponent implements OnInit {
   }
 
   deleteCourse(): void {
-    if (!this.course()) return;
-    
-    if (confirm(`Are you sure you want to delete "${this.course()?.code} - ${this.course()?.title}"?`)) {
+    const course = this.course();
+    if (!course) return;
+
+    if (confirm(`Are you sure you want to delete "${course.code} - ${course.title}"?`)) {
       this.isDeleting.set(true);
-      this.courseService.deleteCourse(this.course()!.id).subscribe({
-        next: () => {
+      this.store.deleteCourse(course.id).subscribe({
+        next: (ok) => {
           this.isDeleting.set(false);
-          this.router.navigate(['/courses']);
+          this.store.clearDeleteError();
+          if (ok) {
+            this.router.navigate(['/courses']);
+          }
         },
-        error: (err) => {
-          this.isDeleting.set(false);
-          this.error.set('Failed to delete course. Please try again.');
-          console.error('Error deleting course:', err);
-        }
       });
     }
   }

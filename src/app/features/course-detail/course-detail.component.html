@@ -18,6 +18,10 @@
           <button class="delete-btn" (click)="deleteCourse()">🗑️ Delete</button>
         </div>
       </div>
+
+      @if (deleteError(); as msg) {
+        <div class="delete-error">⚠️ {{ msg }}</div>
+      }
       
       <div class="course-header">
         <h1>{{ course()?.code }}</h1>

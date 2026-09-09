@@ -8,13 +8,14 @@ import {
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { routes } from "./app.routes";
 import { credentialsInterceptor } from "./interceptors/credentials.interceptor";
+import { errorInterceptor } from "./interceptors/error.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(
-      withInterceptors([credentialsInterceptor]),
+      withInterceptors([credentialsInterceptor, errorInterceptor]),
       withXsrfConfiguration({
         cookieName: "XSRF-TOKEN", // set by the .NET antiforgery middleware
         headerName: "X-XSRF-TOKEN", // header the .NET middleware validates

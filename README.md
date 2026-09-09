@@ -17,6 +17,9 @@ single centralized enrollment store.
 - `@microsoft/signalr` real-time hub client (auto-reconnect)
 - HttpOnly cookie sessions + XSRF double-submit (credentials interceptor,
   `withXsrfConfiguration`) — no tokens in localStorage/JS
+- RFC 7807 ProblemDetails error handling — global `errorInterceptor` surfaces
+  `detail`, redirects 401 → `/login`
+- Optimistic UI mutations with snapshot rollback (SignalStore `CourseStore`)
 - Angular Router (lazy-loaded routes, component input binding for route params)
 - Reactive Forms, SCSS, TypeScript 6 (strict mode)
 
@@ -41,9 +44,10 @@ src/
     │   ├── instructor-dashboard/ Command Center + deferred analytics chart
     │   ├── grade-submission/     Rage-click-guarded grade form (exhaustMap)
     │   └── login/                Identity handshake sign-in (HttpOnly cookie)
-    ├── interceptors/             credentialsInterceptor (withCredentials: true)
+    ├── interceptors/             credentialsInterceptor (withCredentials), errorInterceptor (ProblemDetails/401)
     ├── store/                    SignalStore (single source of truth)
-    │   └── enrollment.store.ts   EnrollmentStore: entities, pendingCount, actions
+    │   ├── enrollment.store.ts   EnrollmentStore: entities, pendingCount, actions
+    │   └── course.store.ts       CourseStore: catalog + optimistic delete w/ rollback
     ├── models/                   Domain models (Course, Enrollment, PagedResponse)
     └── services/                 API + real-time services
         ├── course.service.ts     CourseService (env-driven base, live .NET API)
@@ -98,6 +102,11 @@ Components are standalone, prefixed `tms-` (reusable) or `app-` (feature), use
   cookie; `credentialsInterceptor` sends credentials everywhere and Angular
   echoes `X-XSRF-TOKEN` on every POST/PUT/DELETE. `AuthService` tracks the
   session via Signals; a nav chip shows the signed-in user.
+- **Structured errors + optimistic rollback** — the `errorInterceptor` parses
+  RFC 7807 `ProblemDetails` (`detail`) instead of "Unknown Error" and routes
+  401 → `/login`. Deleting a course mutates the `CourseStore` instantly; if the
+  API rejects the deletion (409, active enrollments), the full pre-mutation
+  snapshot is restored and the detail page shows why.
 - **Lazy loading** — each feature route and deferred block loads on demand; the
   main JS bundle stays ~200 kB.
 
@@ -124,7 +133,8 @@ npm test         # unit tests (Karma)
 - **Backend** — Exercise 5 needs the M7 `TmsHub` / `ITmsHubClient` extended with
   `ReceiveEnrollmentStatusUpdated` (see `docs/module9/session-3.md`). The
   `TmsClient` CORS policy (`docs/module10/session-1.md`), the `AuthController`
-  (HttpOnly `tms_auth` cookie) and the antiforgery middleware (`XSRF-TOKEN`
-  cookie, header `X-XSRF-TOKEN`) land in `Program.cs` + `appsettings` —
-  see `docs/module10/session-2.md`. Backend route must agree with
+  (HttpOnly `tms_auth` cookie) + antiforgery middleware (`docs/module10/
+  session-2.md`), `AddProblemDetails()` + `UseStatusCodePages()` + the SignalR
+  `RequireCors("TmsClient")` chain (`docs/module10/session-3.md`) all land in
+  `Program.cs` + `appsettings`. Backend route must agree with
   `environment.apiUrl`/`/api/v1` (or change `apiUrl`).
