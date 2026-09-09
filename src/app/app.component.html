@@ -6,5 +6,15 @@
   <a routerLink="/enrollments" routerLinkActive="active">🗂️ Enrollments</a>
   <a routerLink="/command-center" routerLinkActive="active">🎛️ Command Center</a>
   <a routerLink="/grade-submission" routerLinkActive="active">🎓 Grades</a>
+  <span class="nav-spacer"></span>
+  @if (isAuthenticated()) {
+    <span class="user-chip">
+      <span class="user-name">{{ currentUser()?.displayName }}</span>
+      <span class="user-role">{{ currentUser()?.role }}</span>
+      <button class="logout-btn" (click)="logout()">Log out</button>
+    </span>
+  } @else {
+    <a routerLink="/login" routerLinkActive="active" class="auth-btn">🔐 Sign in</a>
+  }
 </nav>
 <router-outlet />

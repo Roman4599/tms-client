@@ -15,6 +15,8 @@ single centralized enrollment store.
 - Angular Material 22 (MatTable, MatPaginator, MatSort, forms/spinner)
 - `@defer` / `@defer (on viewport; ...)` lazy chunk splitting
 - `@microsoft/signalr` real-time hub client (auto-reconnect)
+- HttpOnly cookie sessions + XSRF double-submit (credentials interceptor,
+  `withXsrfConfiguration`) — no tokens in localStorage/JS
 - Angular Router (lazy-loaded routes, component input binding for route params)
 - Reactive Forms, SCSS, TypeScript 6 (strict mode)
 
@@ -37,14 +39,17 @@ src/
     │   ├── enrollment-form/      Enrollment request form (reactive, FormArray)
     │   ├── enrollment-list/      Material grid wired to EnrollmentStore
     │   ├── instructor-dashboard/ Command Center + deferred analytics chart
-    │   └── grade-submission/     Rage-click-guarded grade form (exhaustMap)
+    │   ├── grade-submission/     Rage-click-guarded grade form (exhaustMap)
+    │   └── login/                Identity handshake sign-in (HttpOnly cookie)
+    ├── interceptors/             credentialsInterceptor (withCredentials: true)
     ├── store/                    SignalStore (single source of truth)
     │   └── enrollment.store.ts   EnrollmentStore: entities, pendingCount, actions
     ├── models/                   Domain models (Course, Enrollment, PagedResponse)
     └── services/                 API + real-time services
-        ├── course.service.ts     CourseService (live .NET API, envelope mapping)
+        ├── course.service.ts     CourseService (env-driven base, live .NET API)
         ├── enrollment.service.ts EnrollmentService (relative path via proxy)
         ├── grade.service.ts      GradeService (relative path via proxy)
+        ├── auth.service.ts       AuthService (Signals-backed cookie session)
         └── live-sync.service.ts  LiveSyncService (SignalR hub connection manager)
 
 legacy/
@@ -88,6 +93,11 @@ Components are standalone, prefixed `tms-` (reusable) or `app-` (feature), use
   pushes `ReceiveEnrollmentStatusUpdated` events into the `EnrollmentStore`; the
   grid, dashboard, and Command Center update across all open tabs instantly. Dev
   server proxies `/api` + `/hubs` to the .NET API (`proxy.conf.json`).
+- **Identity handshake** (`/login`) — cookie-backed login: the API sets an
+  `HttpOnly` `tms_auth` cookie (JS can't read it) plus a readable `XSRF-TOKEN`
+  cookie; `credentialsInterceptor` sends credentials everywhere and Angular
+  echoes `X-XSRF-TOKEN` on every POST/PUT/DELETE. `AuthService` tracks the
+  session via Signals; a nav chip shows the signed-in user.
 - **Lazy loading** — each feature route and deferred block loads on demand; the
   main JS bundle stays ~200 kB.
 
@@ -112,7 +122,9 @@ npm test         # unit tests (Karma)
   `/api/grades`, `/hubs/tms`) are forwarded by the same proxy; `"ws": true` on
   `/hubs` enables the SignalR WebSocket upgrade.
 - **Backend** — Exercise 5 needs the M7 `TmsHub` / `ITmsHubClient` extended with
-  `ReceiveEnrollmentStatusUpdated` (see `docs/module9/session-3.md`). Exercise 1
-  needs the named `TmsClient` CORS policy in `Program.cs` driven by
-  `AllowedOrigins` in `appsettings.Development.json` (see
-  `docs/module10/session-1.md`).
+  `ReceiveEnrollmentStatusUpdated` (see `docs/module9/session-3.md`). The
+  `TmsClient` CORS policy (`docs/module10/session-1.md`), the `AuthController`
+  (HttpOnly `tms_auth` cookie) and the antiforgery middleware (`XSRF-TOKEN`
+  cookie, header `X-XSRF-TOKEN`) land in `Program.cs` + `appsettings` —
+  see `docs/module10/session-2.md`. Backend route must agree with
+  `environment.apiUrl`/`/api/v1` (or change `apiUrl`).

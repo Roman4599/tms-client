@@ -1,0 +1,45 @@
+<div class="login-shell">
+  <mat-card class="login-card">
+    <div class="top-strip"></div>
+    <h1 class="login-title">Identity Handshake</h1>
+    <p class="login-sub">HttpOnly cookie + XSRF double-submit — no tokens touch JavaScript.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="tight">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" placeholder="admin" autocomplete="username" />
+        @if (form.controls.username.hasError('required')) {
+          <mat-error>Username is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="tight">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="Password123!" autocomplete="current-password" />
+        @if (form.controls.password.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+        }
+      </mat-form-field>
+
+      @if (error(); as message) {
+        <div class="error-box">{{ message }}</div>
+      }
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="login-btn"
+        type="submit"
+        [disabled]="form.invalid || busy()">
+        @if (busy()) {
+          <mat-spinner diameter="18"></mat-spinner>
+          <span>Handshaking…</span>
+        } @else {
+          <span>🔐 Sign in</span>
+        }
+      </button>
+    </form>
+
+    <p class="hint">Demo account: <code>admin</code> / <code>Password123!</code></p>
+  </mat-card>
+</div>

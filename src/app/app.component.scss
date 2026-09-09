@@ -34,4 +34,50 @@ nav {
       }
     }
   }
+
+  .nav-spacer {
+    flex: 1 1 auto;
+  }
+
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 13px;
+
+    .user-name {
+      font-weight: 600;
+    }
+
+    .user-role {
+      color: #8fa8c8;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.6px;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #c0392b;
+      }
+    }
+  }
+
+  .auth-btn {
+    background: #3498db;
+
+    &:hover {
+      background: #2980b9;
+    }
+  }
 }

@@ -1,14 +1,25 @@
 import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
 import { provideRouter, withComponentInputBinding } from "@angular/router";
-import { provideHttpClient } from "@angular/common/http";
+import {
+  provideHttpClient,
+  withInterceptors,
+  withXsrfConfiguration,
+} from "@angular/common/http";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { routes } from "./app.routes";
+import { credentialsInterceptor } from "./interceptors/credentials.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([credentialsInterceptor]),
+      withXsrfConfiguration({
+        cookieName: "XSRF-TOKEN", // set by the .NET antiforgery middleware
+        headerName: "X-XSRF-TOKEN", // header the .NET middleware validates
+      }),
+    ),
     provideAnimations(),
-  ]
+  ],
 };
